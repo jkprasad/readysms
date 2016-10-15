@@ -6,12 +6,18 @@ package com.example.kiran.readysms.sms;
  */
 public class SMSContent {
     private String mobileNumber;
+    private String message;
 
-    public SMSContent(String mobileNumber) {
+    public SMSContent(String mobileNumber, String message) {
         this.mobileNumber = mobileNumber;
+        this.message = message;
     }
 
     public String getMobileNumber() {
         return mobileNumber;
+    }
+
+    public String getMessage() {
+        return message;
     }
 }
