@@ -1,13 +1,12 @@
 package com.example.kiran.readysms;
 
 import android.app.ListActivity;
+import android.content.Context;
 import android.os.Bundle;
+import android.telephony.SmsManager;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.kiran.readysms.sms.SMSContent;
 import com.example.kiran.readysms.view.SMSViewEntry;
@@ -24,11 +23,9 @@ public class MainActivity extends ListActivity {
 
         List<String> messages = getMessages();
 
-        String[] items = new String[messages.size()];
-        messages.toArray(items);
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, items);
+        String[] messageArr = new String[messages.size()];
+        messages.toArray(messageArr);
+        MessagesAdapter adapter = new MessagesAdapter(this,  messageArr);
 
         setListAdapter(adapter);
     }
@@ -46,21 +43,34 @@ public class MainActivity extends ListActivity {
             messages.add(entry.viewText());
         }
 
-        messages.add("Touch here to create a readily available SMS for a contact");
         return messages;
     }
 
     private List<SMSContent> getSMSContents() {
-        return Arrays.asList(new SMSContent("9000434304", "Test message"));
+        return Arrays.asList(new SMSContent("9000434304", "Starting"),
+                new SMSContent("9000434304", "At office"),
+                new SMSContent("9949555073", "At Khairatabad, 10 minutes late"));
     }
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
 
-        TextView itemAtPosition = (TextView)l.getItemAtPosition(position);
+        Object itemAtPosition = l.getItemAtPosition(position);
+        System.out.println(itemAtPosition);
 
-        itemAtPosition.setText("Modified");
+        String[] values = itemAtPosition.toString().split(";");
 
+        SmsManager smsManager = SmsManager.getDefault();
+//        ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.SEND_SMS},1);
+
+        smsManager.sendTextMessage(values[0], null, values[1], null, null);
+
+        Context context = getApplicationContext();
+        CharSequence text = "Sent to " + values[0];
+        int duration = Toast.LENGTH_SHORT;
+
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
     }
 }

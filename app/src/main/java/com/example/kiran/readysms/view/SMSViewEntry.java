@@ -16,6 +16,6 @@ public class SMSViewEntry {
 
     public String viewText()
     {
-        return sms.getMobileNumber() + '\n' + sms.getMessage();
+        return sms.getMobileNumber() + ';' + sms.getMessage();
     }
 }
